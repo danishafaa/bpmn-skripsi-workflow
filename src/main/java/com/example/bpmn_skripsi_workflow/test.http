@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/proposals/start
+Content-Type: application/json
+
+{
+  "namaMahasiswa": "Mahasiswa Uji",
+  "nim": "123456789",
+  "judulProposal": "Sistem Informasi Pengajuan Proposal Skripsi",
+  "deskripsi": "Pengembangan sistem workflow proposal skripsi"
+}

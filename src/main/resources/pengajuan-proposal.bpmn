@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_PengajuanProposal" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1">
+  <bpmn:process id="pengajuan_proposal" name="Pengajuan Proposal Skripsi" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_Pengajuan" name="Mulai Pengajuan">
+      <bpmn:outgoing>Flow_Start_Mahasiswa</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Mahasiswa" name="Mahasiswa Mengajukan Proposal">
+      <bpmn:incoming>Flow_Start_Mahasiswa</bpmn:incoming>
+      <bpmn:outgoing>Flow_Mahasiswa_Staf</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Staf" name="Staf Akademik Memeriksa Kelengkapan">
+      <bpmn:incoming>Flow_Mahasiswa_Staf</bpmn:incoming>
+      <bpmn:outgoing>Flow_Staf_Dosen</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Dosen" name="Dosen Memeriksa Proposal">
+      <bpmn:incoming>Flow_Staf_Dosen</bpmn:incoming>
+      <bpmn:outgoing>Flow_Dosen_Gateway</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Keputusan" name="Keputusan Proposal" default="Flow_Gateway_Revisi">
+      <bpmn:incoming>Flow_Dosen_Gateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_Gateway_Diterima</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Gateway_Revisi</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Revisi" name="Mahasiswa Memperbaiki Proposal">
+      <bpmn:incoming>Flow_Gateway_Revisi</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_Diterima" name="Proposal Diterima">
+      <bpmn:incoming>Flow_Gateway_Diterima</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_Start_Mahasiswa" sourceRef="StartEvent_Pengajuan" targetRef="Task_Mahasiswa" />
+    <bpmn:sequenceFlow id="Flow_Mahasiswa_Staf" sourceRef="Task_Mahasiswa" targetRef="Task_Staf" />
+    <bpmn:sequenceFlow id="Flow_Staf_Dosen" sourceRef="Task_Staf" targetRef="Task_Dosen" />
+    <bpmn:sequenceFlow id="Flow_Dosen_Gateway" sourceRef="Task_Dosen" targetRef="Gateway_Keputusan" />
+    <bpmn:sequenceFlow id="Flow_Gateway_Diterima" name="Diterima" sourceRef="Gateway_Keputusan" targetRef="EndEvent_Diterima">
+      <bpmn:conditionExpression xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="bpmn:tFormalExpression">= keputusan = "diterima"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Gateway_Revisi" name="Perlu Revisi" sourceRef="Gateway_Keputusan" targetRef="Task_Revisi" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_PengajuanProposal">
+    <bpmndi:BPMNPlane id="BPMNPlane_PengajuanProposal" bpmnElement="pengajuan_proposal">
+      <bpmndi:BPMNShape id="Shape_StartEvent_Pengajuan" bpmnElement="StartEvent_Pengajuan">
+        <dc:Bounds x="170" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="147" y="136" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Mahasiswa" bpmnElement="Task_Mahasiswa">
+        <dc:Bounds x="260" y="78" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Staf" bpmnElement="Task_Staf">
+        <dc:Bounds x="460" y="78" width="160" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Dosen" bpmnElement="Task_Dosen">
+        <dc:Bounds x="670" y="78" width="150" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Gateway_Keputusan" bpmnElement="Gateway_Keputusan" isMarkerVisible="true">
+        <dc:Bounds x="880" y="93" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="879" y="143" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_Task_Revisi" bpmnElement="Task_Revisi">
+        <dc:Bounds x="830" y="245" width="170" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_EndEvent_Diterima" bpmnElement="EndEvent_Diterima">
+        <dc:Bounds x="1060" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1034" y="136" width="88" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_Start_Mahasiswa" bpmnElement="Flow_Start_Mahasiswa">
+        <di:waypoint x="206" y="118" />
+        <di:waypoint x="260" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Mahasiswa_Staf" bpmnElement="Flow_Mahasiswa_Staf">
+        <di:waypoint x="410" y="118" />
+        <di:waypoint x="460" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Staf_Dosen" bpmnElement="Flow_Staf_Dosen">
+        <di:waypoint x="620" y="118" />
+        <di:waypoint x="670" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Dosen_Gateway" bpmnElement="Flow_Dosen_Gateway">
+        <di:waypoint x="820" y="118" />
+        <di:waypoint x="880" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Gateway_Diterima" bpmnElement="Flow_Gateway_Diterima">
+        <di:waypoint x="930" y="118" />
+        <di:waypoint x="1060" y="118" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="975" y="93" width="41" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_Gateway_Revisi" bpmnElement="Flow_Gateway_Revisi">
+        <di:waypoint x="905" y="143" />
+        <di:waypoint x="905" y="245" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="891" y="184" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
